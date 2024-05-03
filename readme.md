@@ -22,6 +22,8 @@ This is a simple web application that functions as an alarm clock, allowing user
 
 2. Open the `index.html` file in your web browser to launch the alarm clock app.
 
+Alternatively, you can access the live demo [here](https://nirbhay45.github.io/Alarm-Clock/).
+
 ## Usage
 
 - Select hours, minutes, seconds, and AM/PM from the dropdown menus to set an alarm.

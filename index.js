@@ -1,3 +1,4 @@
+// getting the html elements 
 const currentTime = document.querySelector("#current-time");
 const setHours = document.querySelector("#hours");
 const setMinutes = document.querySelector("#minutes");
@@ -6,7 +7,7 @@ const setAmPm = document.querySelector("#am-pm");
 const setAlarmButton = document.querySelector("#submitButton");
 const alarmContainer = document.querySelector("#alarms-container");
 
-// Adding Hours, Minutes, Seconds in DropDown Menu
+// Adding Hours, Minutes, Seconds in DropDown Menu at the start
 window.addEventListener("DOMContentLoaded", (event) => {
 
     dropDownMenu(1, 12, setHours);
@@ -15,6 +16,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     dropDownMenu(0, 59, setSeconds);
 
+    // for updating time every second 
     setInterval(getCurrentTime, 1000);
     fetchAlarm();
 });
@@ -22,7 +24,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 // Event Listener added to Set Alarm Button
 setAlarmButton.addEventListener("click", getInput);
 
-
+// function for building the dropdown for different cases (Hour, Minute, Second)
 function dropDownMenu(start, end, element) {
     for (let i = start; i <= end; i++) {
         const dropDown = document.createElement("option");
@@ -35,12 +37,14 @@ function dropDownMenu(start, end, element) {
 
 function getCurrentTime() {
     let time = new Date();
+    // converting time into hh:mm:ss am/pm 
     time = time.toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "numeric",
         second: "numeric",
         hour12: true,
     });
+    // updating the value of time into current time(clock)
     currentTime.innerHTML = time;
 
     return time;
@@ -49,17 +53,20 @@ function getCurrentTime() {
 
 function getInput(e) {
     e.preventDefault();
+    // getting values from dropdown
     const hourValue = setHours.value;
     const minuteValue = setMinutes.value;
     const secondValue = setSeconds.value;
     const amPmValue = setAmPm.value;
 
+    // getting the Alarm-Time
     const alarmTime = convertToTime(
         hourValue,
         minuteValue,
         secondValue,
         amPmValue
     );
+    // setting the alarm
     setAlarm(alarmTime);
 }
 
@@ -68,9 +75,12 @@ function convertToTime(hour, minute, second, amPm) {
     return `${parseInt(hour)}:${minute}:${second} ${amPm}`;
 }
 
-
+// function to set alarm 
 function setAlarm(time, fetching = false) {
+
+    // setting interval for each alarm for time comparison
     const alarm = setInterval(() => {
+        // checking if current time matches alarm time
         if (time === getCurrentTime()) {
             alert("Alarm Ringing");
         }
@@ -101,6 +111,7 @@ function addAlaramToDom(time, intervalId) {
 function checkAlarams() {
     let alarms = [];
     const isPresent = localStorage.getItem("alarms");
+    // checking if alarm already present in local storage
     if (isPresent) alarms = JSON.parse(isPresent);
 
     return alarms;
@@ -123,19 +134,20 @@ function fetchAlarm() {
     });
 }
 
-
+// for each alarm giving a delete button to delete the alarm
 function deleteAlarm(event, time, intervalId) {
     const self = event.target;
-
+    // When the user delete an alarm making sure it does not alert the user
     clearInterval(intervalId);
 
     const alarm = self.parentElement;
     console.log(time);
-
+    // deleting from localstorage
     deleteAlarmFromLocal(time);
     alarm.remove();
 }
 
+// function to delete the alarm from the local storage 
 function deleteAlarmFromLocal(time) {
     const alarms = checkAlarams();
 
